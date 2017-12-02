@@ -1,0 +1,80 @@
+/*!
+ * Start Bootstrap - Busines Frontpage (https://startbootstrap.com/template-overviews/business-frontpage)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
+ */
+/* mwilliams:  Sticky footer styles */
+html{
+    position:relative;
+    min-height: 100%
+}
+
+footer{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:100px; /* set fixed height - match body margin-bottom*/
+}
+/*  end sticky footer styles*/
+body {
+  padding-top: 54px;
+  margin-bottom:100px; /* mwilliams: for sticky footer */
+
+}
+
+
+
+
+.business-header {
+  height: 50vh;
+  min-height: 300px;
+  background:url('../images/header-bg.jpg')center center no-repeat scroll;
+  /*background: url('http://placehold.it/1920x400') center center no-repeat scroll;*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+.card {
+  height: 100%;
+}
+
+
+/* mwilliams:  customize bootstrap default styles */
+
+.help-block ul[role=alert] li{color:#DF382C;list-style: none}/* for contact us form validation*/
+.help-block ul[role=alert] li:before {    
+    font-family: 'FontAwesome';
+    content: '\f071'; /*http://fontawesome.io/cheatsheet*/
+    margin:0 5px 0 -15px;
+}
+
+/* success button */
+/*.btn-success {
+  color: #fff;
+  background-color: #c82333;
+  border-color: #c82333;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #48a648;
+  border-color: #449d44;
+}*/
+
+/* dark background */
+/*.bg-dark {
+    background-color: #4c667f!important;
+}*/
+
+/* breadcrumb */
+/*.breadcrumb{background-color: #9fcdff};*/
+
+/* end customize bootstrap default styles */
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+}
