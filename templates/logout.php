@@ -8,12 +8,9 @@
         <li class="breadcrumb-item active">Logout</li>            
     </ol>
     <!-- end breadcrumb -->
-    <h2 class="mt-3 mb-3">Logged Out</h2>
-    <div class="alert alert-primary" role="alert">
+    <div class="alert alert-success" role="alert">
         Thank you for visiting.  You are now logged out! <br>
         Please come back soon!
     </div>
-
-
 </div>
 <!-- /.container -->
