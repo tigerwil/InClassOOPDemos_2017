@@ -46,9 +46,31 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="articlesdropdown">
             <a class="dropdown-item" href="articles.php"><i class="fa fa-list" aria-hidden="true"></i> All Articles</a>
-            <a class="dropdown-item" href="articlesbycategory.php?id=1"><span class="badge badge-pill badge-light">2</span> Database Security</a>
+            
+            <?php
+            //Call the getCategoryList method from the DbHandler to retrieve 
+            //the actual categories from the database
+            $data = $dbh->getCategoryList();
+            //check for any errors first
+            if($data['error']==false){
+                //no error - get data items
+                $catItems = $data['items'];
+                //var_dump($catItems);
+                //loop each catItems and build menu
+                foreach($catItems as $item){
+                    $catId = $item['id'];
+                    $category = $item['category'];
+                    $total = $item['total'];
+                    echo "<a class='dropdown-item' href='articlesbycategory.php?id=$catId'>
+                            <span class='badge badge-pill badge-light'>$total</span> 
+                            $category
+                         </a>";
+                }
+            }
+            ?>
+<!--            <a class="dropdown-item" href="articlesbycategory.php?id=1"><span class="badge badge-pill badge-light">2</span> Database Security</a>
             <a class="dropdown-item" href="articlesbycategory.php?id=7"><span class="badge badge-pill badge-light">3</span> General Web Security</a>
-            <a class="dropdown-item" href="articlesbycategory.php?id=4"><span class="badge badge-pill badge-light">2</span> HTML 5</a>
+            <a class="dropdown-item" href="articlesbycategory.php?id=4"><span class="badge badge-pill badge-light">2</span> HTML 5</a>-->
         </div>
     </li>
     <!-- Account dropdown -->

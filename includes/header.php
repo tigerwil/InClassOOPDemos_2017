@@ -22,8 +22,8 @@ function __autoload($class) {
 
 //instantiate the database handler
 $dbh = new DbHandler();
-print_r($dbh);
-exit();  
+//print_r($dbh);
+//exit();  
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -42,7 +42,13 @@
     </div>
     <!-- /.row -->
     <h2 class="mb-3 mt-4 text-primary">Most Popular Articles</h2>
-    <div class="row">       
+    <div class="row">   
+        <?php
+            //test
+            $data = $dbh->getPopularList();
+            var_dump($data);
+        
+        ?>
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <div class="card-body">
