@@ -112,5 +112,66 @@ class DbHandler{
         //Return data back to calling environment
         return $data;
         
-    }
+    }//End of getPopularList
+    
+    public function getArticle($id){
+        try{
+            //Prepare our sql query with $id param coming from 
+            //outside environment
+            $stmt=$this->conn->prepare("SELECT title,description,content
+                                        FROM pages 
+                                        WHERE id=:id");
+            //Bind our parameter
+            $stmt->bindValue(':id',$id,PDO::PARAM_INT);
+            
+            //Execute the query
+            $stmt->execute();
+            
+            //Fetch the data as an associative array
+            $page = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            //Return array of data items
+            $data = array(
+                'error' =>false,
+                'items'=>$page
+            );
+            
+        } catch (PDOException $ex) {
+                $data = array('error'=>true,
+                              'message'=>$ex->getMessage()
+                             );
+        }//end of try catch
+        
+        //Return final data array
+        return $data;
+        
+    }//end of getArticle
+    
+    
+     public function getArticles(){
+  
+            //build our sql query
+            $sql = "SELECT id, title, description FROM pages ORDER BY title";
+
+            try{
+                $stmt=$this->conn->query($sql);
+                $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                //Return array of data items
+                $data = array(
+                    'error' =>false,
+                    'items'=>$articles
+                );               
+                
+            } catch (PDOException $ex) {
+                $data = array('error'=>true,
+                              'message'=>$ex->getMessage()
+                             );
+            }//end of try catch
+        
+        //Return final data array
+        return $data;
+        
+    }//end of getArticles
+    
+     
 }//End of Class

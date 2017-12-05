@@ -5,6 +5,13 @@ define('SITE_URI', '/InClassOOPDemos_2017/');
 //start the session
 session_start();
 
+//FOR TESTING:  ADD A FICTIONAL USER
+//$_SESSION['user_id']=1;//pretend user 1 is logged in
+//$_SESSION['user_not_expired']=true; //pretend user account is not expired
+//$_SESSION['admin']=true;  //pretend user is an admin
+
+//var_dump($_SESSION);
+
 /* ************************************************************** */
 /* Autoloading Classes
  * Whenever your code tries to create a new instance of a class
