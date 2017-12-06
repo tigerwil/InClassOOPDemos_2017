@@ -7,6 +7,30 @@
         <li class="breadcrumb-item active">Admin</li>            
     </ol>
     <!-- end breadcrumb -->
+    <?php
+        //ONLY AUTHORIZED USER CAN VIEW ARTICLE
+        if (!empty($_SESSION['user_id']) && $_SESSION['admin']){
+            //we found a user who is logged in - store their id in variable
+            $adminUser = $_SESSION['user_id'];
+            
+        }else{
+            $adminUser = null;
+        }
+        
+        //var_dump($_SESSION);
+        //var_dump($adminUser);
+        
+        if(empty($adminUser)){
+            //not an admin user - show message
+            echo '<div class="alert alert-warning" role="alert">
+                    <strong>Admins Only</strong>
+                    <p>You must be logged in as an administrator!</p>
+                  </div>';
+        }else{
+        
+    
+    ?>
+    
     <div class="row">
         <div class="col-lg-4 mb-4">
             <div class="card h-100">
@@ -51,4 +75,7 @@
             </div>
         </div>   
     </div>
+    
+        <?php } ?>
+    
 </div>
