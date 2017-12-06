@@ -12,6 +12,8 @@ session_start();
 
 //var_dump($_SESSION);
 
+ob_start();//turn output buffering on
+
 /* ************************************************************** */
 /* Autoloading Classes
  * Whenever your code tries to create a new instance of a class
