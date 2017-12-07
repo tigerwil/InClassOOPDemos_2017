@@ -51,7 +51,8 @@
             This disables the browser default feedback tooltips, but still provides 
             access to the form validation APIs in JavaScript.
             -->
-            <form name="contactForm" id="contactForm" novalidate method="post">
+<!--            <form name="contactForm" id="contactForm" novalidate method="post">-->
+            <form name="contactForm" id="contactForm" novalidate>
                 <div class="control-group form-group">
                     <div class="controls">
                         <label for="fullname">Full Name:</label>
