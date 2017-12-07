@@ -10,7 +10,10 @@
  * D - Delete
  */
 
+
 class DbHandler{
+    
+    
     
     //private variable to hold the connection
     private $conn;
@@ -173,5 +176,44 @@ class DbHandler{
         
     }//end of getArticles
     
+    public function createUser($email,$password,$first_name,$last_name){
+        //First check if user already exists in table
+        if(!$this->isUserExists($email)){
+            //User does not exist - continue
+            //Generate password hash'
+            $password_hash = PassHash::hash($password);
+            
+            //Generate random activation code
+            $active = md5(uniqid(rand(),true));
+            
+            
+            
+        }else{
+            //User already exists - return error and message
+            $data=array('error'=>true,                
+                        'message'=>'USER_ALREADY_EXISTS'
+            );
+            
+        }
+        
+        //Return one final data array
+        return data;
+    }//End of createUser
+    
+    private function isUserExists($email){
+        $stmt=$this->conn->prepare("SELECT COUNT(*)
+                                    FROM users 
+                                    WHERE email=:email");
+        
+        $stmt->bindValue(':email',$email,PDO::PARAM_STR);
+        $stmt->execute();
+        $num_rows = $stmt->fetchColumn();
+        
+        //return true or false
+        return $num_rows>0;
+        
+    }//end of isUserExists 
+
      
 }//End of Class
+

@@ -14,7 +14,7 @@
         //Array for storing validation errors
         $reg_errors = array();
 
-        //1.Check for firstname (characters, apos, period, space and dash b/w 2 and 60
+        //1.Check for firstname (characters, apos, period, space and dash b/w 2 and 45
         /* rules:  between 2, 45 characters
           letters A-Z, case-insensitive (i)
           space, apostrophe, period, hyphen */
