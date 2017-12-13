@@ -38,13 +38,16 @@
         }
 
         // 3.Check for a password and match against the confirmed password:
-        /* rules:  Must be betwen 6 and 20 characters long with 
-          at least one lowercase letter, one uppercase letter, and
-          one number.
-          ?=   zero-width lookahead assertion:  makes matches based upon what
-          follows a character.
+        /* rules:  
+         * - start of the line ^
+         * - Password must be 6-40 characters - {6,40} 
+         * - Must have no spaces, at least 1 digit (?=.*[\d])
+         * - at least 1 uppercase letter (?=.*[A-Z]) 
+         * - and at least one lowercase letter (?=.*[a-z]) 
+         * - Allows specifying special characters - !@#$%_ 
+         * - end of line $        
          */
-        if (preg_match('/^(\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])\w*){6,20}$/', $_POST['password1'])) {
+        if (preg_match('/^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])[\w\d!@#$%_]{6,40}$/', $_POST['password1'])) {
             if ($_POST['password1'] == $_POST['password2']) {
                 $password2 = strip_tags($_POST['password2']);
             } else {
@@ -59,6 +62,74 @@
         /*  end validation    */
         if (empty($reg_errors)) {
             //Validation OK: Create User 
+            //var_dump($_POST);
+            //retrieve post inputs
+            $f = $_POST['firstname'];
+            $l = $_POST['lastname'];
+            $e = $_POST['email'];
+            $p= $_POST['password2'];
+            
+            //Call our db handler createuser method
+            $data = $dbh->createUser($e,$p,$f,$l);
+            //var_dump($data);            
+            //Check data array
+            if ($data['error'] == false) {
+                //$message = $data['message'];
+                $active = $data['active'];
+                //var_dump($active);
+                //=================== SEND EMAIL ======================//
+                //1.  Prepare to send email
+                $siteURL = "http://localhost:8888/InClassOOPDemos_2017/activate.php?x=" . urlencode($email) . "&y=$active";
+                $replyToEmail = 'knowledge@programming.oultoncollege.com';
+                $replyToName = 'Knowledge Is Power';
+                $mailSubject = 'Knowledge Is Power Registration';
+                $messageTEXT = "Thank you for registering at Knowledge Is Power.\n\n
+                                    To activate your account please click on this link:  "
+                        . $siteURL;
+                $messageHTML = "<p><strong>Thank you for registering at Knowledge is Power.</strong></p> 
+                                    <p>To activate your account, please click on this link:</p>
+                                    <a href='$siteURL'>Activate our Account</a>";
+
+
+                $fromEmail = 'knowledge@programming.oultoncollege.com';
+                $fromName = 'Knowledge Is Power';
+                $toEmail = $email;
+                $toName = $firstname . ' ' . $lastname;
+
+                //2.  Send email
+                require './mail/sendmail.php';
+                $mail = new sendMail($replyToEmail, $replyToName, $mailSubject, $messageHTML, $messageTEXT, $fromEmail, $fromName, $toEmail, $toName);
+                $result = $mail->SendMail();
+                if ($result) {
+                    // MAIL SUCCESS: show html message
+                    echo '<div class="alert alert-success"><strong>Account Registered</strong>
+                                <p>A confirmation email has been sent to your email address.  
+                                    Please click on the link in that email in order to activate 
+                                    your account.
+                                </p>
+                              </div>';
+                } else {
+                    //MAIL ERROR
+                    echo '<div class="alert alert-success"><strong>Account Registered</strong>
+                                <p>Warning:  There was a problem sending a confirmation email to the following email: <strong>' .
+                    $email . '</strong>.</p> <p>Please contact customer support!</p>                                 
+                              </div>';
+                }
+
+                //================== END SEND EMAIL ===================//
+            } else {
+                echo '<div class="alert alert-danger"><strong>Registration Failed</strong>
+                        <p>The following error has occured: ' . $data['message'] . '</p>' . 
+                        '<a class="btn btn-primary" href="register.php">Try again</a></p></div>';
+            }
+
+            //finish page:  hide form
+            echo '</div>';
+            include './includes/footer.php'; //footer
+            exit();
+            
+            //End check data array            
+            
         } else {
             //Validation Errors: Display Errors
             //var_dump($reg_errors);

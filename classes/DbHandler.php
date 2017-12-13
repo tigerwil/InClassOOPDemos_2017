@@ -50,7 +50,7 @@ class DbHandler{
         }//end of swith        
     }//End of dbConnectError function
     
-    
+  
     /**
      * getCategoryList() function
      * Get a list of categories for creating menu
@@ -84,9 +84,10 @@ class DbHandler{
     }//end of getCategoryList Method
     
     /**
-     * getPopularList() method 
+     * getPopularList() method
      * Get a list of the 3 most popular articles based on history
      * of pages visited
+     * @return array
      */
     public function getPopularList(){
         $sql="SELECT COUNT(*)AS num, page_id, pages.title, 
@@ -117,6 +118,12 @@ class DbHandler{
         
     }//End of getPopularList
     
+    /**
+     * getArticle() method
+     * Return a single article
+     * @param type $id
+     * @return array
+     */
     public function getArticle($id){
         try{
             //Prepare our sql query with $id param coming from 
@@ -150,7 +157,11 @@ class DbHandler{
         
     }//end of getArticle
     
-    
+    /**
+     * getArticles() method
+     * Return all articles
+     * @return array
+     */
      public function getArticles(){
   
             //build our sql query
@@ -176,6 +187,17 @@ class DbHandler{
         
     }//end of getArticles
     
+    
+    //====================== User Registration =========================//
+    /**
+     * createUser() method
+     * Add a new application user
+     * @param type $email
+     * @param type $password
+     * @param type $first_name
+     * @param type $last_name
+     * @return array
+     */
     public function createUser($email,$password,$first_name,$last_name){
         //First check if user already exists in table
         if(!$this->isUserExists($email)){
@@ -186,6 +208,35 @@ class DbHandler{
             //Generate random activation code
             $active = md5(uniqid(rand(),true));
             
+            //Insert a new user to the database
+            //Note: set the date_expires to yesterday (until they activate account)
+            $stmt=$this->conn->prepare("INSERT INTO users (email,pass,first_name,last_name,date_expires,active)
+                                        VALUES(:email,:pass,:fname,:lname,SUBDATE(NOW(),INTERVAL 1 DAY),:active)");
+            //Bind Parameters
+            $stmt->bindValue(':email',$email,PDO::PARAM_STR);
+            $stmt->bindValue(':pass',$password_hash,PDO::PARAM_STR); 
+            $stmt->bindValue(':fname',$first_name,PDO::PARAM_STR); 
+            $stmt->bindValue(':lname',$last_name,PDO::PARAM_STR);
+            $stmt->bindValue(':active',$active,PDO::PARAM_STR);
+            
+            //Execute the statement
+            $result = $stmt->execute();
+            
+            //Prepare array of result
+            if($result){
+                //success - build success message 
+                $data = array(
+                    'error'=>false,
+                    'message'=>'USER_CREATE_SUCCESS',
+                    'active'=>$active                    
+                );
+            }else{
+                //fail - build fail message
+                $data = array(
+                    'error'=>true,
+                    'message'=>'USER_CREATE_FAIL'       
+                );
+            }
             
             
         }else{
@@ -197,9 +248,55 @@ class DbHandler{
         }
         
         //Return one final data array
-        return data;
+        return $data;
     }//End of createUser
     
+    /**
+     * activateUser() method
+     * Activate a newly registered user account
+     * @param type $email
+     * @param type $active
+     * @return array
+     */
+    public function activateUser($email,$active){
+        
+        //Prepare update statement
+        $stmt=$this->conn->prepare("UPDATE users 
+                                    SET active=NULL,
+                                        date_expires=ADDDATE(date_expires, INTERVAL 1 YEAR)
+                                    WHERE email=:email AND active=:active 
+                                    LIMIT 1");
+        //Bind our statement parameters
+        $stmt->bindValue(':email',$email,PDO::PARAM_STR);
+        $stmt->bindValue(':active',$active,PDO::PARAM_STR);
+        
+        //Execute the statement
+        $stmt->execute();
+        
+        //Retrieve the RowCount to find out if records were affected
+        if($stmt->rowCount()>0){
+            //success
+            $data = array(
+                'error'=>false,
+                'message'=>'USER_ACTIVATE_SUCCESS'                
+            );
+        }else{
+            //not successful
+            $data = array(
+                'error'=>true,
+                'message'=>'USER_ACTIVATE_FAIL'                
+            );
+        }
+        //Return a final data array
+        return $data;
+    }//End of activateUser
+    
+    /**
+     * isUserExists() method
+     * Check if user already exists in the database
+     * @param type $email
+     * @return boolean
+     */
     private function isUserExists($email){
         $stmt=$this->conn->prepare("SELECT COUNT(*)
                                     FROM users 
@@ -213,7 +310,12 @@ class DbHandler{
         return $num_rows>0;
         
     }//end of isUserExists 
+    //=================== end Registration ===================//
+    
+    //================== User login ==========================//
+    
+    
+    //====================end login ==========================//
 
      
 }//End of Class
-
