@@ -313,7 +313,73 @@ class DbHandler{
     //=================== end Registration ===================//
     
     //================== User login ==========================//
-    
+    /**
+     * checkLogin method
+     * Check user email and password for login
+     * @param type $email
+     * @param type $password
+     * @return boolean
+     */
+    public function checkLogin($email,$password){
+        //1. Check if email is in the database
+        if($this->isUserExists($email)){
+            //email exists - now check the email-password combination
+            $stmt=$this->conn->prepare("SELECT pass from users 
+                                        WHERE email =:email");
+            
+            //Bind statement parameter
+            $stmt->bindValue(':email',$email,PDO::PARAM_STR);
+            
+            //Execute the statement
+            $stmt->execute();
+            
+            //Fetch the record as an PDO object
+            $row = $stmt->fetch(PDO::FETCH_OBJ);
+            
+            //Check the hash against form password
+            if(PassHash::check_password($row->pass, $password)){
+                //User password is a match
+                return true;
+            }else{
+                //No match
+                return false;
+            }
+            
+            
+        }else{
+            //email was not found 
+            return false;
+        }     
+   }//End of checkLogin 
+   
+   public function getUserByEmail($email){
+       try{
+           //Prepare our query
+           $stmt=$this->conn->prepare("SELECT id,type, email, 
+                                          first_name, last_name,
+                                          IF(date_expires<=NOW(),true,false) as expired,
+                                          IF(type='admin',true,false) as admin
+                                        FROM users
+                                        WHERE email=:email");
+           //Bind our parameter
+           $stmt->bindValue(':email',$email,PDO::PARAM_STR);
+           
+           if($stmt->execute()){
+               $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+               $data = array(
+                   'error'=>false,
+                   'items'=>$user
+               );
+               return $data;
+           }else{
+               return null;
+           }
+           
+       } catch (PDOException $ex) {
+            return null;
+       }
+       
+   }//End getUserByEmail
     
     //====================end login ==========================//
 
