@@ -515,12 +515,13 @@ class DbHandler {
     }
 
 //End of getFavorite
-    //========================== USER FAVORITES ==============// 
+    //========================END USER FAVORITES ==============// 
+    //
     //============================= ADMIN ONLY =======================//
     public function getAdminCategories() {
         $sql = "SELECT id, category
-               FROM categories
-               ORDER BY category";
+                FROM categories
+                ORDER BY category";
         try {
             $stmt = $this->conn->query($sql);
             $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -536,9 +537,7 @@ class DbHandler {
         }//end of try catch
         //Return data back to calling environment
         return $data;
-    }
-
-//end of getAdminCategories Method
+    }//end of getAdminCategories Method
 
     public function addArticle($category_id, $title, $description, $content) {
         $stmt = $this->conn->prepare("INSERT INTO pages (category_id,title,description,content)
@@ -547,7 +546,7 @@ class DbHandler {
         $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
         $stmt->bindValue(':title', $title, PDO::PARAM_STR);
         $stmt->bindValue(':description', $description, PDO::PARAM_STR);
-         $stmt->bindValue(':content', $content, PDO::PARAM_STR);
+        $stmt->bindValue(':content', $content, PDO::PARAM_STR);
 
         //Execute the statement
         $result = $stmt->execute();
@@ -567,7 +566,7 @@ class DbHandler {
             );
         }
         return $data;
-    }
+    }//End of addArticle
 
     //============================ END ADMIN ONLY ====================//
 }

@@ -6,29 +6,31 @@ if(empty($_POST)){
     echo "No arguments Provided!";
     return false;
    } 
-}
+}//end of empty POST
 
-//Store params
-$type =  $_POST['type'];
-$pageid = $_POST['pageid'];
-$userid = $_POST['userid'];
-
+//Get post parameters
+    $type = $_POST['type'];
+    $page_id = $_POST['pageid'];
+    $user_id = $_POST['userid'];
     
-function __autoload($class) {
+ //var_dump($_POST);
+ //exit();
+ function __autoload($class) {
     require_once 'classes/' . $class . '.php';
-}
+}   
 
 //instantiate the database handler
 $dbh = new DbHandler();
 
-if ($type=='add'){
-  $data = $dbh->addFavorite($userid, $pageid);  
-  //var_dump($data);
-  //$message = $data['message'];
+
+//get the type of work (add or delete)
+if($type=='add'){
+    //add Favorite - call the dbh addFavorite
+    $data = $dbh->addFavorite($user_id, $page_id);
+    
 }else{
-   $data = $dbh->delFavorite($userid, $pageid);
-   //var_dump($data);
-   //$message = $data['message'];
+    //delete Favorite - call the dbh delFavorite
+    $data = $dbh->delFavorite($user_id, $page_id);
 }
-//var_dump($data);
+//Return data
 return $data;

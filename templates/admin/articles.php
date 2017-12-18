@@ -11,11 +11,9 @@
     <!-- end breadcrumb -->
     
     <?php
-        if($_POST){
-            //var_dump($_POST);
-            
+        if($_POST){           
             //get post params
-            $category_id=$_POST['category'];
+            $category_id=$_POST['category_id'];
             $title=$_POST['title'];
             $description=$_POST['description'];
             $content=$_POST['content'];
@@ -26,23 +24,24 @@
                         <p>The article page was successfully added!</p></div>';
             } else {
                 echo '<div class="alert alert-danger"><strong>Insert Failure</strong>
-                        <p>An error has occured please try again</p></div>';
+                        <p>An error has occurRed please try again!</p></div>';
             }
              //finish page:  hide form
             echo '</div>';
             include './includes/footer.php'; //footer
             exit();
-        }
+        }//End of if POST
         $data = $dbh->getAdminCategories();
         if($data['error']==false){
             $categories = $data['items'];
             
         }
+        //var_dump($data);
     ?>
     <form method="post" action="admin-articles.php" class="mb-4" novalidate>
         <div class="form-group">
-             <label for="category">Category</label>
-             <select  class="form-control" id="category" name="category">
+             <label for="category_id">Category</label>
+             <select  class="form-control" id="category_id" name="category_id">
                 <?php
                     foreach($categories as $category){
                        echo "<option value='{$category['id']}'>{$category['category']}</option>" ;
@@ -74,7 +73,7 @@
         </div>
         <div class="form-group">
             <label>Article Content</label>
-            <textarea id="content" name="content" required></textarea>
+            <textarea class="form-control" id="content" name="content" required></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Add</button>
