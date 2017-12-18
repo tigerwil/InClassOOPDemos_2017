@@ -4,17 +4,17 @@
     <?php
     
         //ONLY AUTHORIZED USER CAN VIEW ARTICLE
-        if(isset($_SESSION['user_id']) && isset($_SESSION['user_not_expired'])){
+        if(isset($_SESSION['user_id'])){
             //we found a user who is logged in - store their id in variable
-            $userid = $_SESSION['user_id'];
+            $user_id = $_SESSION['user_id'];
             
         }else{
-            $userid = null;
+            $user_id = null;
         }
         
         //var_dump($userid);//null when not logged in
         
-        if(!empty($userid)){
+        if(!empty($user_id)){
             //user is logged in - continue
          //1. Retrieve the id parameter from the url querystring
         if (  isset($_GET['id']) && is_numeric($_GET['id'])     ){
@@ -60,6 +60,34 @@
                         
                     }//end of foreach
                     
+                    //USER FAVORITE
+                    $data = $dbh->getFavorite($user_id,$id);
+                    //var_dump($data);
+                    if($data['error']==false){
+                        //get favorites
+                        $myFavs = $data['items'];
+                        
+                        //And empty items array means - this is not already favorite
+                        if(!empty($myFavs)){
+                            //delete
+                            echo "<a href='' class='btn btn-danger mb-3 delfav'
+                                      data-id=$id data-userid=$user_id>
+                                    <i class='fa fa-heart'></i> Delete Favorite
+                                  </a>";
+                        }else{
+                            //add
+                            echo "<a href='' class='btn btn-primary mb-3 addfav'
+                                      data-id=$id data-userid=$user_id>
+                                    <i class='fa fa-heart'></i> Add Favorite
+                                  </a>";
+                            
+                        }
+                    }
+                    
+                 
+                    
+                    //END USER FAVORITE
+                    
                 }//end of if else empty
                 
             }//end of if data error
@@ -84,4 +112,5 @@
                   </div>';
         }//end of if not empty
         ?>
+    <div id="success"></div>
 </div>
